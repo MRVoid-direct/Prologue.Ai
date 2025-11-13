@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Голосовой ассистент</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background: #d4edda; color: #155724; }
+        .disconnected { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Голосовой ассистент "Пролог"</h1>
+
+        <div id="status" class="disconnected">
+            ❌ Нейросеть недоступна (запустите LM Studio)
+        </div>
+
+        <button id="voiceBtn">🎤 Нажмите для голосового ввода</button>
+        <p id="statusText">Готов к работе</p>
+
+        <div id="chat" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; min-height: 100px;">
+            <strong>Пролог:</strong> Привет! Нажмите на кнопку микрофона, чтобы начать общение.
+        </div>
+    </div>
+
+    <script>
+        // JavaScript код из предыдущего примера
+        class VoiceAssistant {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this.init();
+            }
+
+            init() {
+                if ('webkitSpeechRecognition' in window) {
+                    this.recognition = new webkitSpeechRecognition();
+                    this.recognition.continuous = false;
+                    this.recognition.interimResults = false;
+                    this.recognition.lang = 'ru-RU';
+
+                    this.recognition.onstart = () => {
+                        this.isListening = true;
+                        this.updateUI('🎤 Слушаю...', true);
+                    };
+
+                    this.recognition.onresult = (event) => {
+                        const command = event.results[0][0].transcript;
+                        this.processCommand(command);
+                    };
+
+                    this.recognition.onend = () => {
+                        this.isListening = false;
+                        this.updateUI('🎤 Нажмите для голосового ввода', false);
+                    };
+
+                    document.getElementById('voiceBtn').onclick = () => this.startListening();
+                } else {
+                    this.addMessage('Ваш браузер не поддерживает голосовой ввод', 'assistant');
+                }
+            }
+
+            startListening() {
+                if (this.recognition && !this.isListening) {
+                    this.recognition.start();
+                }
+            }
+
+            processCommand(command) {
+                this.addMessage(command, 'user');
+
+                if (command.includes('привет')) {
+                    this.speak('Привет! Рад вас слышать!');
+                } else if (command.includes('время')) {
+                    const time = new Date().toLocaleTimeString('ru-RU');
+                    this.speak(`Сейчас ${time}`);
+                } else {
+                    this.speak('Я пока учусь. Скажите "привет" или "время"');
+                }
+            }
+
+            addMessage(text, sender) {
+                const chat = document.getElementById('chat');
+                const message = document.createElement('div');
+                message.innerHTML = `<strong>${sender === 'user' ? 'Вы' : 'Пролог'}:</strong> ${text}`;
+                chat.appendChild(message);
+            }
+
+            speak(text) {
+                this.addMessage(text, 'assistant');
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ru-RU';
+                    speechSynthesis.speak(utterance);
+                }
+            }
+
+            updateUI(text, listening) {
+                document.getElementById('statusText').textContent = text;
+                document.getElementById('voiceBtn').style.background = listening ? '#dc3545' : '#4CAF50';
+            }
+        }
+
+        // Запускаем ассистент при загрузке
+        window.addEventListener('load', () => {
+            window.assistant = new VoiceAssistant();
+        });
+    </script>
+</body>
+</html>
