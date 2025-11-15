@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Голосовой Ассистент Пролог</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>Пролог</h1>
+            </div>
+            <div class="status" id="status">
+                <span class="status-dot"></span>
+                <span class="status-text">Загрузка...</span>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Блок чата -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Сообщения будут добавляться здесь -->
+                </div>
+
+                <!-- Форма ввода -->
+                <div class="input-container">
+                    <div class="input-group">
+                        <input type="text" id="commandInput" placeholder="Введите команду или вопрос..." autocomplete="off">
+                        <button id="sendButton" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button id="voiceButton" class="btn btn-secondary">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    <div class="quick-commands">
+                        <button class="quick-btn" data-command="привет">👋 Привет</button>
+                        <button class="quick-btn" data-command="время">🕒 Время</button>
+                        <button class="quick-btn" data-command="нейросеть как дела?">🧠 Спроси нейросеть</button>
+                        <button class="quick-btn" data-command="проверь нейросеть">🔍 Проверить нейросеть</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок информации -->
+            <div class="info-panel">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Доступные команды</h3>
+                    <ul class="commands-list">
+                        <li><strong>Привет</strong> - Начать общение</li>
+                        <li><strong>Время/Дата</strong> - Узнать текущее время</li>
+                        <li><strong>Открой браузер</strong> - Открыть Google</li>
+                        <li><strong>Нейросеть [вопрос]</strong> - Задать вопрос ИИ</li>
+                        <li><strong>Проверь нейросеть</strong> - Проверить подключение</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-network-wired"></i> Статус системы</h3>
+                    <div class="status-items">
+                        <div class="status-item">
+                            <span>Ассистент:</span>
+                            <span class="status-value" id="assistantStatus">Загрузка...</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Нейросеть (LM Studio):</span>
+                            <span class="status-value" id="neuroStatus">Загрузка...</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Голосовое управление:</span>
+                            <span class="status-value" id="voiceStatus">Доступно</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Футер -->
+        <footer class="footer">
+            <p>Голосовой ассистент "Пролог" | Powered by Python + Flask + LM Studio</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
